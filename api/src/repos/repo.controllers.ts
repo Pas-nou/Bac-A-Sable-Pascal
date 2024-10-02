@@ -1,53 +1,78 @@
-import express, { Response, Request, NextFunction } from "express";
-import Joi from "joi";
-import repos from "../../data/repos.json";
-import type { Repo } from "./repo.type"
+import express, { Response, Request  } from "express";
+// import { validate } from "class-validator";
+// import Joi from "joi";
 
-let myRepos: Array<Repo> = repos;
+import { Repo } from "./repo.entities";
+import { Status } from "../status/status.entities";
+
+// import repos from "../../data/repos.json";
+// import type { Repo } from "./repo.type";
+
+// let myRepos: Array<Repo> = repos;
 
 const repoControllers = express.Router();
 
-const schema = Joi.object({
-    id: Joi.string().required(),
-    name: Joi.string().required(),
-    url: Joi.string().required(),
-    isPrivate: Joi.number().min(1).max(2).required()
-})
+// const schema = Joi.object({
+//   id: Joi.string().required(),
+//   name: Joi.string().required(),
+//   url: Joi.string().required(),
+//   isPrivate: Joi.number().min(1).max(2).required(),
+// });
 
-const validateRepo = (req: Request, res: Response, next: NextFunction) => {
-    const { error } = schema.validate(req.body)
+// const validateRepo = (req: Request, res: Response, next: NextFunction) => {
+//   const { error } = schema.validate(req.body);
 
-    if (error == null) {
-        next()
-    } else {
-        res.status(422).json(error)
-    }
-}
+//   if (error == null) {
+//     next();
+//   } else {
+//     res.status(422).json(error);
+//   }
+// };
 
-repoControllers.get('/', (req: Request, res: Response) => {
-    const { status } = req.query;
-    const result = status !== undefined ? myRepos.filter((repo: Repo) => repo.isPrivate === +status) : myRepos;
-    res.status(200).json(result)
-})
+repoControllers.get("/", async (_: any, res: Response) => {
+  try {
+    const repos = await Repo.find({
+      relations: {
+        status: true
+      }
+    });
+    res.status(200).json(repos)
+  } catch (error) {
+    res.sendStatus(500)
+  }
+});
 
-repoControllers.get('/:id', (req: Request, res: Response) => {
-    const repo = myRepos.find(rep => rep.id === req.params.id) as Repo;
+// repoControllers.get("/:id", (req: Request, res: Response) => {
+//   const repo = myRepos.find((rep) => rep.id === req.params.id) as Repo;
 
-    if (repo) {
-        res.status(200).json(repo)
-    } else {
-        res.sendStatus(404)
-    }
-})
+//   if (repo) {
+//     res.status(200).json(repo);
+//   } else {
+//     res.sendStatus(404);
+//   }
+// });
+repoControllers.post("/", async (req: Request, res: Response) => {
+  try {
+    const repo = new Repo();
+    repo.id = req.body.id;
+    repo.name = req.body.name;
+    repo.url = req.body.url;
 
-repoControllers.post('/', validateRepo, (req: Request, res: Response) => {
-    myRepos.push(req.body)
-    res.status(201).json(req.body)
-})
+    const status = await Status.findOneOrFail({ where: { id: req.body.isPrivate}})
+    repo.status = status;
 
-repoControllers.delete('/:id', (req: Request, res: Response) => {
-    myRepos = myRepos.filter((repo: Repo) => repo.id !== req.params.id)
-    res.sendStatus(204)
-})
+    await repo.save();
+    res.status(201).json(repo);
+
+  } catch (error) {
+    res.sendStatus(500)
+  }
+});
+
+
+// repoControllers.delete("/:id", (req: Request, res: Response) => {
+//   myRepos = myRepos.filter((repo: Repo) => repo.id !== req.params.id);
+//   res.sendStatus(204);
+// });
 
 export default repoControllers;
