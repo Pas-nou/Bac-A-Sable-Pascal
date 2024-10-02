@@ -1,9 +1,11 @@
-import express, { Response, Request  } from "express";
+import express, { Response, Request } from "express";
+import { In } from "typeorm";
 // import { validate } from "class-validator";
 // import Joi from "joi";
 
 import { Repo } from "./repo.entities";
 import { Status } from "../status/status.entities";
+import { Lang } from "../langs/lang.entities";
 
 // import repos from "../../data/repos.json";
 // import type { Repo } from "./repo.type";
@@ -30,16 +32,18 @@ const repoControllers = express.Router();
 // };
 
 repoControllers.get("/", async (_: any, res: Response) => {
-  try {
-    const repos = await Repo.find({
-      relations: {
-        status: true
-      }
-    });
-    res.status(200).json(repos)
-  } catch (error) {
-    res.sendStatus(500)
-  }
+    try {
+        const repos = await Repo.find({
+            relations: {
+                status: true,
+                langs: true
+            }
+        });
+        res.status(200).json(repos)
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+    }
 });
 
 // repoControllers.get("/:id", (req: Request, res: Response) => {
@@ -52,21 +56,25 @@ repoControllers.get("/", async (_: any, res: Response) => {
 //   }
 // });
 repoControllers.post("/", async (req: Request, res: Response) => {
-  try {
-    const repo = new Repo();
-    repo.id = req.body.id;
-    repo.name = req.body.name;
-    repo.url = req.body.url;
+    try {
+        const repo = new Repo();
+        repo.id = req.body.id;
+        repo.name = req.body.name;
+        repo.url = req.body.url;
 
-    const status = await Status.findOneOrFail({ where: { id: req.body.isPrivate}})
-    repo.status = status;
+        const status = await Status.findOneOrFail({ where: { id: req.body.isPrivate } })
+        repo.status = status;
 
-    await repo.save();
-    res.status(201).json(repo);
+        const langs = await Lang.find({ where: { id: In(req.body.langs.map((l: number) => l)) } });
+        repo.langs = langs;
 
-  } catch (error) {
-    res.sendStatus(500)
-  }
+        await repo.save();
+        res.status(201).json(repo);
+
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+    }
 });
 
 
