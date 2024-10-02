@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "fetch": "gh repo list Pas-nou --json  id,name,url,languages,isPrivate > ./data/raw.json",
-    "create": "ts-node-dev ./data/create.ts"
+    "create": "ts-node-dev ./data/create.ts",
+     "dev": "ts-node-dev ./src/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +17,7 @@
     "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/node": "^22.7.4"
   }
 }
