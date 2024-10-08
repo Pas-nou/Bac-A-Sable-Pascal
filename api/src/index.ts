@@ -1,10 +1,15 @@
 import express from "express";
+import cors from 'cors';
 import router from "./router"
 import { dataSource } from "./db/client";
-
 import "reflect-metadata";
 
 const app = express();
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
 
 app.use('/api', router)
 

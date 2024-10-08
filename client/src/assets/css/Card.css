@@ -1,0 +1,50 @@
+#card_container {
+    width: 600px;
+    height: 280px;
+    border-radius: 10px;
+    background: linear-gradient(52deg, rgba(216, 120, 24, 0.32) -14.74%, rgba(78, 60, 30, 0.79) 23.91%, rgba(38, 43, 31, 0.93) 65.31%, rgba(24, 37, 32, 0.98) 85.95%, #122220 97.68%);
+    font-family: "Space Grotesk", sans-serif;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    overflow: hidden;
+    transition: background-color 0.8s ease, transform 0.5s ease;
+    padding-bottom: 60px;
+}
+
+#card_container::before {
+    content: '';
+    position: relative;
+    top: -50%;
+    left: -180%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(45deg);
+    transition: all 0.8s ease;
+}
+
+#card_container:hover::before {
+    left: 100%;
+}
+
+#card_container:hover {
+    background-color: white;
+    transform: scale(1.05);;
+}
+
+#card_name {
+    font-size: 32px;
+    font-weight: 500;
+    color: #D87818;
+    /* text-align: center; */
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}

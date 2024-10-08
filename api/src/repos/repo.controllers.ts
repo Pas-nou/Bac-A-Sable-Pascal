@@ -46,15 +46,24 @@ repoControllers.get("/", async (_: any, res: Response) => {
     }
 });
 
-// repoControllers.get("/:id", (req: Request, res: Response) => {
-//   const repo = myRepos.find((rep) => rep.id === req.params.id) as Repo;
-
-//   if (repo) {
-//     res.status(200).json(repo);
-//   } else {
-//     res.sendStatus(404);
-//   }
-// });
+repoControllers.get("/:id", async (req: Request, res: Response) => {
+    console.log("GET REPOS");
+    try {
+        const repos = await Repo.find({
+            where: {
+                id: req.params.id,
+            },
+            relations: {
+                status: true,
+                langs: true,
+            },
+        });
+        res.status(200).json(repos);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
 repoControllers.post("/", async (req: Request, res: Response) => {
     try {
         const repo = new Repo();
