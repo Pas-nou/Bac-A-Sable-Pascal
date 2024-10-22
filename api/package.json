@@ -1,32 +1,37 @@
 {
-  "name": "bac-a-sable-pascal",
+  "name": "api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "fetch": "gh repo list Pas-nou --json  id,name,url,languages,isPrivate > ./data/raw.json",
+    "fetch": "gh repo list jujuck --json  id,name,url,languages,isPrivate > ./data/raw.json",
     "create": "ts-node-dev ./data/create.ts",
     "dev": "ts-node-dev ./src/index.ts",
     "seed": "ts-node-dev ./src/db/seed.ts",
     "full": "gh repo list jujuck --json  id,name,url,languages,isPrivate > ./data/raw.json && ts-node-dev ./src/db/seed.ts && ts-node-dev ./src/index.ts"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.7.0",
+    "ts-node-dev": "^2.0.0"
+  },
   "dependencies": {
+    "@apollo/server": "^4.11.0",
     "class-validator": "^0.14.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.21.0",
-    "fs": "^0.0.1-security",
+    "graphql": "^16.9.0",
+    "graphql-scalars": "^1.23.0",
     "joi": "^17.13.3",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
-    "ts-node-dev": "^2.0.0",
+    "type-graphql": "^2.0.0-rc.2",
     "typeorm": "^0.3.20"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.7.4"
   }
 }
