@@ -28,7 +28,8 @@ function App() {
   return (
     <main>
 
-      <h1>Git'Em All!</h1>
+      <h1>Git'Em All! Youpi !</h1>
+      <h2>C'est trop cool </h2>
       <ul id="map_card">
         {data.fullrepos.map((repo) => (
           <Card
