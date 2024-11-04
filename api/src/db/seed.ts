@@ -1,3 +1,7 @@
+type LangData = { id: number, label: string };
+type StatusData = { label: string };
+type RepoData = { id: string; name: string; url: string };
+type LangByRepoData = { repo_id: string; lang_id: string };
 import { dataSource } from "./client";
 
 import { Lang } from "../langs/lang.entities";
@@ -9,6 +13,8 @@ import status from "../../data/status.json";
 import { Repo } from "../repos/repo.entities";
 import repos from "../../data/repos.json";
 import lang_by_repo from "../../data/lang_by_repo.json";
+
+
 (async () => {
   await dataSource.initialize();
   const queryRunner = dataSource.createQueryRunner();
@@ -25,7 +31,7 @@ import lang_by_repo from "../../data/lang_by_repo.json";
     await queryRunner.commitTransaction();
 
     const savedlangs = await Promise.all(
-      langs.map(async (el) => {
+      langs.map(async (el : LangData) => {
         const lang = new Lang();
         lang.label = el.label;
 
@@ -36,7 +42,7 @@ import lang_by_repo from "../../data/lang_by_repo.json";
     // console.log(savedlangs);
 
     const savedStatus = await Promise.all(
-      status.map(async (el) => {
+      status.map(async (el: StatusData) => {
         const status = new Status();
         status.label = el.label;
 
@@ -48,7 +54,7 @@ import lang_by_repo from "../../data/lang_by_repo.json";
     console.info("Status saved");
     // const savedRepos =
     await Promise.all(
-      repos.map(async (el) => {
+      repos.map(async (el: RepoData) => {
         const repo = new Repo();
         repo.id = el.id;
         repo.name = el.name;
@@ -59,11 +65,11 @@ import lang_by_repo from "../../data/lang_by_repo.json";
         // ) as Status;
         repo.status = savedStatus[0];
 
-        const mylangs = savedlangs.filter((svLg) => {
+        const mylangs = savedlangs.filter((svLg: Lang) => {
           const associatedlang = lang_by_repo.filter(
             (lgbyrep) => lgbyrep.repo_id === el.id
           );
-          const langLabel = langs.filter((lg) =>
+          const langLabel = langs.filter((lg: LangData) =>
             associatedlang.some((assolg) => assolg.lang_id === lg.id)
           );
           return langLabel.some((lgLabel) => lgLabel.label === svLg.label);
