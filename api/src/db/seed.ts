@@ -1,7 +1,10 @@
 type LangData = { id: number, label: string };
 type StatusData = { label: string };
 type RepoData = { id: string; name: string; url: string };
-type LangByRepoData = { repo_id: string; lang_id: string };
+type LangByRepoData = { repo_id: string; lang_id: number };
+type LangByRepoOther = {
+  label: string;
+}
 import { dataSource } from "./client";
 
 import { Lang } from "../langs/lang.entities";
@@ -67,12 +70,12 @@ import lang_by_repo from "../../data/lang_by_repo.json";
 
         const mylangs = savedlangs.filter((svLg: Lang) => {
           const associatedlang = lang_by_repo.filter(
-            (lgbyrep) => lgbyrep.repo_id === el.id
+            (lgbyrep: LangByRepoData) => lgbyrep.repo_id === el.id
           );
           const langLabel = langs.filter((lg: LangData) =>
-            associatedlang.some((assolg) => assolg.lang_id === lg.id)
+            associatedlang.some((assolg: LangByRepoData) => assolg.lang_id === lg.id)
           );
-          return langLabel.some((lgLabel) => lgLabel.label === svLg.label);
+          return langLabel.some((lgLabel: LangByRepoOther) => lgLabel.label === svLg.label);
         });
         repo.langs = mylangs;
         repo.isFavorite = false;
