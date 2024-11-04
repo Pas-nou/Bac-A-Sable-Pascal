@@ -3,7 +3,7 @@ FROM node:lts-alpine AS dev
 WORKDIR /app
 COPY *.json ./
 COPY src src
-COPY src/data src/data  # Ajout du dossier data pour inclure tous les fichiers JSON
+COPY src/data src/data
 RUN npm install
 EXPOSE 4000
 
